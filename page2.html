@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lá thư dành riêng cho em</title>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #fdeef3;
+      font-family: "Inter", sans-serif;
+      color: #444;
+    }
+
+    /* --- ẢNH ĐƠN GIẢN --- */
+    .gallery {
+      padding: 40px 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 20px;
+    }
+    .pic {
+      background: #fff;
+      padding: 12px;
+      border-radius: 14px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      text-align: center;
+    }
+    .pic img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      filter: grayscale(100%);
+    }
+    .pic .cap {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    /* --- PHONG BÌ --- */
+    .envelope-wrap {
+      text-align: center;
+      padding: 60px 20px;
+    }
+    .envelope {
+      background: white;
+      width: 260px;
+      padding: 45px 20px;
+      border-radius: 20px;
+      margin: 0 auto;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+      cursor: pointer;
+      transition: 0.25s;
+    }
+    .envelope:hover {
+      transform: translateY(-4px);
+    }
+    .envelope span {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #d63384;
+    }
+
+    /* --- LÁ THƯ --- */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.4s;
+      z-index: 1000;
+    }
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .letter-box {
+      background: #fffdf7;
+      max-width: 90%;
+      width: 520px;
+      padding: 40px 30px;
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      text-align: center;
+      font-size: 1.25rem;
+      line-height: 1.8;
+      position: relative;
+    }
+
+    .letter-title {
+      color: #d63384;
+      font-size: 1.9rem;
+      font-weight: 800;
+      margin-bottom: 25px;
+    }
+
+    .btn-yes {
+      margin-top: 40px;
+      padding: 14px 28px;
+      border: none;
+      font-size: 1.1rem;
+      border-radius: 40px;
+      background: #d63384;
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .btn-yes:hover {
+      background: #b2256b;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Ảnh -->
+  <div class="gallery" id="gallery"></div>
+
+  <!-- Phong bì -->
+  <div class="envelope-wrap">
+    <div class="envelope" id="openLetter">
+      <span>Mở thư của anh ♡</span>
+    </div>
+  </div>
+
+  <!-- Lá thư -->
+  <div class="overlay" id="overlay">
+    <div class="letter-box">
+      <div class="letter-title">Gửi em,</div>
+
+      <p>
+        Cảm ơn em vì đã cùng anh đi qua những khoảnh khắc đẹp như hôm nay.
+        Những tấm hình vừa rồi chỉ là vài mảnh ghép trong cả ngàn kỷ niệm mà tụi mình đã có.
+        <br><br>
+        Anh chỉ muốn nói…<br>
+        Cảm ơn em vì đã ở đây, vì đã chọn anh.
+      </p>
+
+      <button class="btn-yes" id="agreeBtn">Em đồng ý ♡</button>
+    </div>
+  </div>
+
+
+  <script>
+    // --- Tạo 10 ảnh ---
+    const captions = [
+      "Ngày đầu tiên mình gặp",
+      "Lần đầu đi chơi riêng",
+      "Một buổi chiều đẹp trời",
+      "Nụ cười làm anh nhớ mãi",
+      "Khoảnh khắc anh chụp lén",
+      "Tấm hình em thích nhất",
+      "Một ngày bình yên",
+      "Hôm trời mưa nhẹ",
+      "Selfie ngốc nghếch",
+    ];
+
+    const gallery = document.getElementById("gallery");
+
+    for (let i = 1; i <= 9; i++) {
+      const div = document.createElement("div");
+      div.className = "pic";
+      div.innerHTML = `
+        <img src="images/11.jpg">
+        <div class="cap">${captions[i-1]}</div>
+      `;
+      gallery.appendChild(div);
+    }
+
+    // Mở thư
+    const openLetter = document.getElementById("openLetter");
+    const overlay = document.getElementById("overlay");
+    openLetter.onclick = () => overlay.classList.add("active");
+
+    // Nhấn đồng ý -> chuyển trang
+    const agreeBtn = document.getElementById("agreeBtn");
+    agreeBtn.onclick = () => {
+      window.location.href = "timer.html";
+    };
+  </script>
+</body>
+</html>

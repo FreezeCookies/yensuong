@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thời gian bên nhau</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;500&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #11101a;
+  color: #fff;
+  font-family: "Inter", sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+  padding: 20px;
+}
+
+h1 {
+  font-family: "Playfair Display", serif;
+  font-size: 3rem;
+  margin-bottom: 40px;
+  letter-spacing: 1px;
+}
+
+.time-wrap {
+  display: flex;
+  gap: 25px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.box {
+  background: rgba(255,255,255,0.08);
+  padding: 20px 22px;
+  border-radius: 20px;
+  min-width: 120px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+  backdrop-filter: blur(8px);
+}
+
+.num {
+  font-size: 3.2rem;
+  font-weight: 600;
+  color: #ffb3c6;
+}
+
+.label {
+  margin-top: 6px;
+  opacity: 0.8;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+}
+
+.exact {
+  margin-top: 20px;
+  font-size: 1.8rem;
+  opacity: 0.8;
+}
+
+.msg {
+  margin-top: 40px;
+  font-size: 1.4rem;
+  font-style: italic;
+  color: #ffb3c6;
+  opacity: 0.9;
+}
+
+@media (max-width: 600px) {
+  h1 { font-size: 2.3rem; }
+  .num { font-size: 2.6rem; }
+  .box { min-width: 100px; }
+  .exact { font-size: 1.4rem; }
+}
+</style>
+</head>
+<body>
+
+<h1>Thời gian kể từ ngày bạn bên tôi:))))</h1>
+
+<div class="time-wrap">
+  <div class="box">
+    <div class="num" id="days">0</div>
+    <div class="label">Ngày</div>
+  </div>
+
+  <div class="box">
+    <div class="num" id="hours">00</div>
+    <div class="label">Giờ</div>
+  </div>
+
+  <div class="box">
+    <div class="num" id="minutes">00</div>
+    <div class="label">Phút</div>
+  </div>
+
+  <div class="box">
+    <div class="num" id="seconds">00</div>
+    <div class="label">Giây</div>
+  </div>
+</div>
+
+<div class="exact" id="exact">00:00:00</div>
+<div class="msg">Từ ngày bạn nói “Mình đồng ý” ♡</div>
+
+<script>
+  // Lấy thời gian bắt đầu từ localStorage, nếu chưa có thì lưu thời gian hiện tại
+  let startTime = localStorage.getItem("loveStartTime");
+  if (!startTime) {
+    startTime = Date.now();
+    localStorage.setItem("loveStartTime", startTime);
+  } else {
+    startTime = parseInt(startTime);
+  }
+
+  function updateTimer() {
+    const diff = Date.now() - startTime;
+
+    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+    document.getElementById("days").textContent = d;
+    document.getElementById("hours").textContent = h.toString().padStart(2, "0");
+    document.getElementById("minutes").textContent = m.toString().padStart(2, "0");
+    document.getElementById("seconds").textContent = s.toString().padStart(2, "0");
+
+    document.getElementById("exact").textContent =
+      `${h.toString().padStart(2,"0")}:${m.toString().padStart(2,"0")}:${s.toString().padStart(2,"0")}`;
+  }
+
+  updateTimer();
+  setInterval(updateTimer, 1000);
+</script>
+
+</body>
+</html>

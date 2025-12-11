@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>10 kỷ niệm đẹp nhất của tụi mình</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+    .gallery {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      padding: 20px;
+    }
+    .polaroid {
+      position: absolute;
+      background: white;
+      padding: 12px 12px 36px;
+      border-radius: 16px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+      transform: rotate(var(--r));
+      transition: all 1s cubic-bezier(0.25, 0.8, 0.25, 1);
+      cursor: pointer;
+      user-select: none;
+      max-width: 88vw;
+    }
+    .polaroid:hover:not(.viewed) {
+      transform: rotate(var(--r)) scale(1.1) translateY(-10px);
+      box-shadow: 0 30px 70px rgba(0,0,0,0.45);
+      z-index: 9999;
+    }
+    .polaroid.viewed {
+      filter: grayscale(100%) brightness(0.6);
+      cursor: default;
+      z-index: 1 !important;
+      transform: rotate(var(--r)) scale(0.92);
+      opacity: 0.75;
+    }
+    .polaroid img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      display: block;
+    }
+    .caption {
+      text-align: center;
+      margin-top: 16px;
+      font-weight: 700;
+      color: #444;
+      font-size: 1rem;
+    }
+    .modal {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.94);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden; transition: 0.4s; z-index: 10000;
+    }
+    .modal.active { opacity: 1; visibility: visible; }
+    .modal-content {
+      max-width: 92%; max-height: 96vh;
+      background: white; border-radius: 24px;
+      overflow: hidden;
+      animation: pop 0.6s ease-out;
+    }
+    .modal img { width: 100%; }
+    .message {
+      padding: 28px 20px;
+      text-align: center;
+      font-size: 1.2rem;
+      line-height: 1.8;
+      color: #333;
+    }
+    .counter {
+      position: fixed;
+      top: 20px; right: 20px;
+      background: rgba(255,255,255,0.95);
+      color: #d63384;
+      padding: 12px 20px;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 15px;
+      z-index: 99999;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      transition: all 0.5s;
+    }
+    .counter.complete {
+      background: #ff4757;
+      color: white;
+      animation: pulse 1.2s infinite;
+      font-size: 16px;
+    }
+    @keyframes pop {
+      0% { transform: scale(0.5); opacity: 0; }
+      80% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
+    @media (max-width: 480px) {
+      .gallery { padding: 10px; }
+      .caption { font-size: 0.9rem; }
+      .message { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="counter">Đã mở <span id="count">0</span>/10 kỷ niệm</div>
+
+  <div class="gallery" id="gallery"></div>
+
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <img id="modalImg" src="" alt="">
+      <div class="message" id="modalMessage"></div>
+    </div>
+  </div>
+
+  <script>
+    const TOTAL = 10;
+
+    const data = [
+      { cap: "1", msg: "." },
+      { cap: "2", msg: "." },
+      { cap: "3", msg: "." },
+      { cap: "4", msg: "." },
+      { cap: "5", msg: "." },
+      { cap: "6", msg: "." },
+      { cap: "7", msg: "." },
+      { cap: "8", msg: "." },
+      { cap: "9", msg: "." },
+      { cap: "10", msg: "." },
+    ];
+
+    const gallery = document.getElementById('gallery');
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modalImg');
+    const modalMessage = document.getElementById('modalMessage');
+    const counter = document.getElementById('count');
+    const counterBox = document.querySelector('.counter');
+
+    let openedCount = 0; // mỗi lần load lại đều bắt đầu từ 0
+    const viewed = new Set(); // chỉ lưu trong phiên hiện tại
+
+    function goToPage2() {
+      counterBox.classList.add('complete');
+      counterBox.innerHTML = 'Đủ 10/10 rồi nè!';
+      modal.classList.remove('active');
+      setTimeout(() => {
+        window.location.href = "page2.html";
+      }, 2200);
+    }
+
+    function createPhoto(i) {
+      const angle = Math.random() * 40 - 20;
+      const size = 260 + Math.random() * 80;
+      const x = 30 + Math.random() * (window.innerWidth - size - 60);
+      const y = 60 + Math.random() * (window.innerHeight - size - 120);
+
+      const div = document.createElement('div');
+      div.className = 'polaroid';
+      div.style.setProperty('--r', angle + 'deg');
+      div.style.left = x + 'px';
+      div.style.top = y + 'px';
+      div.style.width = size + 'px';
+      div.style.zIndex = 100;
+
+      div.innerHTML = `
+        <img src="images/${i}.jpg" alt="">
+        <div class="caption">${data[i-1].cap}</div>
+      `;
+
+      div.onclick = () => {
+        if (viewed.has(i)) return; // tránh click lại
+
+        modalImg.src = `images/${i}.jpg`;
+        modalMessage.textContent = data[i-1].msg;
+        modal.classList.add('active');
+
+        viewed.add(i);
+        openedCount++;
+        counter.textContent = openedCount;
+
+        div.classList.add('viewed');
+        div.style.zIndex = 1;
+        div.onclick = null;
+
+        if (openedCount === TOTAL) {
+          goToPage2();
+        }
+      };
+
+      gallery.appendChild(div);
+    }
+
+    // Tạo 10 tấm
+    for (let i = 1; i <= TOTAL; i++) {
+      const img = new Image();
+      img.src = `images/${i}.jpg`;
+      img.onload = () => createPhoto(i);
+      img.onerror = () => console.log(`Không tìm thấy images/${i}.jpg`);
+    }
+
+    modal.addEventListener('click', () => modal.classList.remove('active'));
+  </script>
+</body>
+</html>
